@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I'm Sorry 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rose:    #f9a8d4;
+    --deep:    #e879a0;
+    --blush:   #fce7f3;
+    --cream:   #fff1f7;
+    --text:    #6b2145;
+    --soft:    #f472b6;
+    --glow:    rgba(249,168,212,0.45);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ── SORRY OCEAN ── */
+  #sorry-ocean {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  #sorry-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── MAIN CONTENT ── */
+  #main {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 60px 20px 80px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: floatIn 1.2s cubic-bezier(.23,1,.32,1) both;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 10vw, 7rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--deep) 0%, #c2185b 50%, var(--soft) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    text-shadow: none;
+    letter-spacing: -1px;
+    filter: drop-shadow(0 4px 18px rgba(232,121,160,0.35));
+  }
+
+  .header .subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    color: var(--deep);
+    margin-top: 10px;
+    opacity: 0.85;
+    letter-spacing: 1px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1.5px solid rgba(249,168,212,0.5);
+    border-radius: 28px;
+    padding: clamp(28px, 5vw, 56px) clamp(22px, 5vw, 52px);
+    max-width: 680px;
+    width: 100%;
+    box-shadow:
+      0 8px 40px rgba(232,121,160,0.18),
+      0 2px 12px rgba(249,168,212,0.12),
+      inset 0 1px 0 rgba(255,255,255,0.7);
+    animation: floatIn 1.4s .3s cubic-bezier(.23,1,.32,1) both;
+  }
+
+  /* ── TYPEWRITER ── */
+  .typewriter-wrap {
+    text-align: center;
+    margin-bottom: 28px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #typewriter-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.15rem, 3.5vw, 1.7rem);
+    line-height: 1.55;
+    color: var(--text);
+    font-style: italic;
+  }
+
+  #cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.2em;
+    background: var(--deep);
+    vertical-align: middle;
+    margin-left: 3px;
+    animation: blink .7s steps(1) infinite;
+    border-radius: 2px;
+  }
+
+  /* ── MESSAGE ── */
+  .message {
+    font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+    line-height: 1.85;
+    color: #7a2d52;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  .message .line {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .7s ease, transform .7s ease;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .message .line.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 28px 0;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--rose), transparent);
+  }
+
+  .divider span { font-size: 1.3rem; }
+
+  /* ── SORRY SCROLL ── */
+  .sorry-scroll-section {
+    text-align: center;
+    margin: 8px 0 22px;
+  }
+
+  .sorry-scroll-section p {
+    font-size: 0.85rem;
+    color: var(--deep);
+    margin-bottom: 10px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    letter-spacing: .5px;
+  }
+
+  .sorry-ticker {
+    overflow: hidden;
+    height: 36px;
+    background: linear-gradient(90deg, #fce7f3, #fbcfe8, #fce7f3);
+    border-radius: 30px;
+    border: 1px solid rgba(249,168,212,.5);
+    position: relative;
+  }
+
+  .sorry-ticker-inner {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    white-space: nowrap;
+    animation: ticker 18s linear infinite;
+    will-change: transform;
+  }
+
+  .sorry-ticker-inner span {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--deep);
+    padding: 0 8px;
+    flex-shrink: 0;
+  }
+
+  /* ── COUNTER ── */
+  .counter-wrap {
+    text-align: center;
+    margin-bottom: 22px;
+    animation: floatIn 1.6s .6s cubic-bezier(.23,1,.32,1) both;
+  }
+
+  .counter-label {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--deep);
+    margin-bottom: 4px;
+    opacity: .7;
+  }
+
+  #sorry-count {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 7vw, 4rem);
+    font-weight: 700;
+    color: var(--deep);
+    filter: drop-shadow(0 2px 12px rgba(232,121,160,.4));
+    transition: transform .1s;
+  }
+
+  #sorry-count.bump { transform: scale(1.08); }
+
+  /* ── BUTTON ── */
+  .btn-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+  }
+
+  #forgive-btn {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 2.8vw, 1.25rem);
+    font-style: italic;
+    color: white;
+    background: linear-gradient(135deg, #ec4899 0%, #e11d7a 50%, #f472b6 100%);
+    border: none;
+    border-radius: 50px;
+    padding: clamp(14px, 3vw, 18px) clamp(32px, 6vw, 52px);
+    cursor: pointer;
+    box-shadow:
+      0 6px 30px rgba(236,72,153,.4),
+      0 2px 8px rgba(232,121,160,.25),
+      inset 0 1px 0 rgba(255,255,255,.25);
+    transition: transform .22s cubic-bezier(.23,1,.32,1), box-shadow .22s ease;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: .5px;
+  }
+
+  #forgive-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,.18) 0%, transparent 60%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  #forgive-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow:
+      0 12px 40px rgba(236,72,153,.5),
+      0 4px 16px rgba(232,121,160,.3);
+  }
+
+  #forgive-btn:active { transform: scale(.97); }
+
+  /* ── FORGIVEN STATE ── */
+  .forgiven-msg {
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    color: var(--deep);
+    opacity: 0;
+    transform: scale(.9);
+    transition: opacity .6s ease, transform .6s cubic-bezier(.23,1,.32,1);
+    pointer-events: none;
+  }
+
+  .forgiven-msg.show { opacity: 1; transform: scale(1); }
+
+  /* ── CLOSING ── */
+  .closing {
+    margin-top: 40px;
+    text-align: center;
+    max-width: 480px;
+    animation: floatIn 1.8s .8s cubic-bezier(.23,1,.32,1) both;
+  }
+
+  .closing p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.05rem, 3vw, 1.35rem);
+    color: var(--deep);
+    line-height: 1.7;
+    opacity: .9;
+  }
+
+  /* ── FLOATING HEARTS CANVAS ── */
+  #click-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+  }
+
+  /* ── KEYFRAMES ── */
+  @keyframes floatIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @keyframes heartPulse {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.12); }
+    100% { transform: scale(1); }
+  }
+
+  .heart-icon {
+    display: inline-block;
+    animation: heartPulse 1.5s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  /* ── SORRY BOX ── */
+  .sorry-box-wrap {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: floatIn 2s 1s cubic-bezier(.23,1,.32,1) both;
+  }
+
+  .sorry-box-label {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--deep);
+    margin-bottom: 12px;
+    opacity: .8;
+    letter-spacing: .5px;
+  }
+
+  #sorry-box {
+    width: 220px;
+    height: 220px;
+    background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 40%, #f9a8d4 100%);
+    border: 2px solid rgba(249,168,212,.7);
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 8px 32px rgba(232,121,160,.25),
+      0 2px 8px rgba(249,168,212,.2),
+      inset 0 1px 0 rgba(255,255,255,.6);
+    transition: transform .3s cubic-bezier(.23,1,.32,1), box-shadow .3s ease;
+    user-select: none;
+  }
+
+  #sorry-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,.3) 0%, transparent 60%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  #sorry-box:hover {
+    transform: translateY(-6px) scale(1.04);
+    box-shadow:
+      0 18px 50px rgba(232,121,160,.38),
+      0 4px 16px rgba(249,168,212,.3);
+  }
+
+  #sorry-box:active { transform: scale(.96); }
+
+  .sorry-box-icon {
+    font-size: 3.2rem;
+    margin-bottom: 10px;
+    animation: heartPulse 1.8s ease-in-out infinite;
+    filter: drop-shadow(0 2px 8px rgba(232,121,160,.5));
+  }
+
+  .sorry-box-text {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--deep);
+    letter-spacing: 1px;
+  }
+
+  .sorry-box-sub {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.72rem;
+    color: #c2185b;
+    margin-top: 4px;
+    opacity: .75;
+    letter-spacing: .5px;
+  }
+
+  .sorry-box-shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.45) 50%, transparent 60%);
+    background-size: 200% 100%;
+    animation: shimmer 2.5s linear infinite;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  @keyframes shimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+  }
+
+  /* ── SORRY MODAL OVERLAY ── */
+  #sorry-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(107, 33, 69, 0.45);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .4s ease;
+  }
+
+  #sorry-modal.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal-box {
+    background: rgba(255,255,255,.96);
+    border: 2px solid rgba(249,168,212,.6);
+    border-radius: 28px;
+    width: min(92vw, 720px);
+    height: min(85vh, 680px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow:
+      0 24px 80px rgba(232,121,160,.35),
+      0 4px 20px rgba(249,168,212,.2);
+    transform: scale(.88) translateY(30px);
+    transition: transform .45s cubic-bezier(.23,1,.32,1);
+  }
+
+  #sorry-modal.open .modal-box {
+    transform: scale(1) translateY(0);
+  }
+
+  .modal-header {
+    padding: 22px 28px 16px;
+    background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+    border-bottom: 1px solid rgba(249,168,212,.4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .modal-header-left h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.2rem, 4vw, 1.7rem);
+    color: var(--deep);
+    font-weight: 700;
+  }
+
+  .modal-header-left p {
+    font-size: 0.78rem;
+    color: #c2185b;
+    margin-top: 3px;
+    font-style: italic;
+    opacity: .85;
+  }
+
+  .modal-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(249,168,212,.35);
+    color: var(--deep);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s, transform .2s;
+    flex-shrink: 0;
+  }
+
+  .modal-close:hover {
+    background: rgba(232,121,160,.5);
+    transform: scale(1.1);
+  }
+
+  /* progress bar */
+  .modal-progress-wrap {
+    height: 4px;
+    background: rgba(249,168,212,.2);
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  #modal-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ec4899, #f472b6);
+    transition: width .15s linear;
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* scrollable sorry body */
+  .modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 22px 24px;
+    scroll-behavior: smooth;
+  }
+
+  .modal-body::-webkit-scrollbar { width: 6px; }
+  .modal-body::-webkit-scrollbar-track { background: #fce7f3; }
+  .modal-body::-webkit-scrollbar-thumb { background: var(--rose); border-radius: 6px; }
+
+  #sorry-words-container {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    line-height: 2;
+    color: var(--deep);
+    word-break: break-word;
+    text-align: justify;
+  }
+
+  #sorry-words-container .sorry-word {
+    display: inline;
+    margin-right: 4px;
+    opacity: 0;
+    animation: wordFadeIn .4s forwards;
+  }
+
+  @keyframes wordFadeIn {
+    from { opacity: 0; transform: scale(.8); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .sorry-word-special {
+    color: #c2185b;
+    font-weight: 700;
+    font-size: 1.05em;
+  }
+
+  .sorry-word-heart { color: #ec4899; }
+
+  .modal-footer {
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+    border-top: 1px solid rgba(249,168,212,.4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .modal-count-badge {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    color: var(--deep);
+    font-style: italic;
+  }
+
+  #modal-sorry-num {
+    font-weight: 700;
+    color: #c2185b;
+    font-size: 1rem;
+  }
+
+  .modal-auto-scroll-btn {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.78rem;
+    color: white;
+    background: linear-gradient(135deg, #ec4899, #f472b6);
+    border: none;
+    border-radius: 20px;
+    padding: 7px 18px;
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    letter-spacing: .3px;
+  }
+
+  .modal-auto-scroll-btn:hover {
+    transform: scale(1.04);
+    box-shadow: 0 4px 14px rgba(236,72,153,.4);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 480px) {
+    .card { border-radius: 20px; }
+    #main { padding: 40px 14px 60px; }
+    #sorry-box { width: 180px; height: 180px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SORRY BACKGROUND -->
+<div id="sorry-ocean">
+  <canvas id="sorry-canvas"></canvas>
+</div>
+
+<!-- CLICK HEARTS -->
+<canvas id="click-canvas"></canvas>
+
+<div id="main">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>I'm Sorry</h1>
+    <p class="subtitle">from the bottom of my heart</p>
+  </div>
+
+  <!-- SORRY COUNT BADGE -->
+  <div class="counter-wrap">
+    <div class="counter-label">times I mean it</div>
+    <div id="sorry-count">0</div>
+  </div>
+
+  <!-- MAIN CARD -->
+  <div class="card">
+
+    <!-- TYPEWRITER -->
+    <div class="typewriter-wrap">
+      <div>
+        <span id="typewriter-text"></span><span id="cursor"></span>
+      </div>
+    </div>
+
+    <div class="divider"><span>💗</span></div>
+
+    <!-- MESSAGE LINES -->
+    <div class="message" id="message-block">
+      <span class="line">I know I hurt you, and that was never my intention.</span>
+      <span class="line">and the thought of losing your trust breaks my heart.</span>
+      <span class="line">I've been carrying this weight and it's made me realize</span>
+      <span class="line">just how much you truly mean to me. 🌸</span>
+      <span class="line">I'm not asking you to forget — only to forgive.</span>
+    </div>
+
+    <div class="divider"><span>🌸</span></div>
+
+    <!-- SORRY TICKER -->
+    <div class="sorry-scroll-section">
+      <p>every single one of these is real ↓</p>
+      <div class="sorry-ticker">
+        <div class="sorry-ticker-inner" id="ticker-inner"></div>
+      </div>
+    </div>
+
+    <!-- BUTTON -->
+    <div class="btn-wrap">
+      <button id="forgive-btn" onclick="handleForgive()">
+        Please Forgive Me <span class="heart-icon">💖</span>
+      </button>
+    </div>
+
+    <!-- FORGIVEN MESSAGE -->
+    <div class="forgiven-msg" id="forgiven-msg">
+      Thank you… you just made my whole world brighter 🌷
+    </div>
+
+  </div>
+
+  <!-- SORRY BOX -->
+  <div class="sorry-box-wrap">
+    <div class="sorry-box-label">✨ tap the box to feel how sorry I am ✨</div>
+    <div id="sorry-box" onclick="openSorryModal()">
+      <div class="sorry-box-shimmer"></div>
+      <div class="sorry-box-icon">💌</div>
+      <div class="sorry-box-text">Open Me</div>
+      <div class="sorry-box-sub">10,000+ sorries inside</div>
+    </div>
+  </div>
+
+  <!-- SORRY MODAL -->
+  <div id="sorry-modal" onclick="handleModalOverlayClick(event)">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <h2>Every single Sorry 💗</h2>
+          <p>Scroll through — each one is from the heart</p>
+        </div>
+        <button class="modal-close" onclick="closeSorryModal()">✕</button>
+      </div>
+      <div class="modal-progress-wrap">
+        <div id="modal-progress-bar"></div>
+      </div>
+      <div class="modal-body" id="modal-body" onscroll="updateModalProgress()">
+        <div id="sorry-words-container"></div>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-count-badge">
+          <span id="modal-sorry-num">0</span> sorries rendered
+        </div>
+        <button class="modal-auto-scroll-btn" id="scroll-btn" onclick="toggleAutoScroll()">▶ Auto Scroll</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="closing">
+    <p>I hope you can forgive me ❤️<br>
+    You deserve all the love and kindness in this world,<br>
+    </p>
+  </div>
+
+</div>
+
+<script>
+/* ── TICKER BUILD ── */
+(function buildTicker() {
+  const inner = document.getElementById('ticker-inner');
+  const word = 'sorry ';
+  // ~10 000 "sorry" instances; we render half and CSS mirrors it for the loop
+  const chunk = Array(5000).fill('sorry').join(' · ');
+  // Two identical halves for seamless infinite scroll
+  for (let i = 0; i < 2; i++) {
+    const span = document.createElement('span');
+    span.textContent = chunk + ' · ';
+    inner.appendChild(span);
+  }
+})();
+
+/* ── SORRY COUNT ANIMATION ── */
+(function animateCount() {
+  const el = document.getElementById('sorry-count');
+  const target = 10247;
+  const duration = 3200;
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    const val = Math.floor(ease * target);
+    el.textContent = val.toLocaleString();
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = target.toLocaleString();
+  }
+  requestAnimationFrame(step);
+})();
+
+/* ── SORRY BACKGROUND CANVAS ── */
+(function sorryBg() {
+  const canvas = document.getElementById('sorry-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  const COLORS = ['#f9a8d4','#f472b6','#ec4899','#fda4af','#fce7f3','#fbcfe8'];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function makeParticle() {
+    return {
+      x: Math.random() * W,
+      y: H + 20 + Math.random() * 100,
+      vx: (Math.random() - .5) * .4,
+      vy: -(0.35 + Math.random() * 0.55),
+      size: 8 + Math.random() * 11,
+      alpha: .06 + Math.random() * .14,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      word: 'sorry',
+      rot: (Math.random() - .5) * .4,
+      rotV: (Math.random() - .5) * .003,
+    };
+  }
+
+  function init() {
+    resize();
+    for (let i = 0; i < 220; i++) {
+      const p = makeParticle();
+      p.y = Math.random() * H; // scatter initial
+      particles.push(p);
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = p.alpha;
+      ctx.fillStyle = p.color;
+      ctx.font = `italic ${p.size}px 'Playfair Display', serif`;
+      ctx.fillText(p.word, 0, 0);
+      ctx.restore();
+
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.rotV;
+
+      if (p.y < -30) {
+        Object.assign(p, makeParticle());
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  init();
+  draw();
+})();
+
+/* ── TYPEWRITER ── */
+(function typewriter() {
+  const lines = [
+    "I'm really sorry…",
+    "You mean a lot to me.",
+    "More than words can say. 💕",
+  ];
+  const el = document.getElementById('typewriter-text');
+  let li = 0, ci = 0, deleting = false, pause = 0;
+
+  function tick() {
+    if (pause > 0) { pause--; setTimeout(tick, 50); return; }
+
+    const line = lines[li];
+    if (!deleting) {
+      el.textContent = line.slice(0, ci + 1);
+      ci++;
+      if (ci === line.length) { deleting = true; pause = 60; }
+      setTimeout(tick, 65);
+    } else {
+      el.textContent = line.slice(0, ci - 1);
+      ci--;
+      if (ci === 0) {
+        deleting = false;
+        li = (li + 1) % lines.length;
+        pause = 20;
+      }
+      setTimeout(tick, 38);
+    }
+  }
+  setTimeout(tick, 800);
+})();
+
+/* ── MESSAGE LINES REVEAL ── */
+(function revealLines() {
+  const lines = document.querySelectorAll('.message .line');
+  lines.forEach((l, i) => {
+    setTimeout(() => l.classList.add('visible'), 1800 + i * 320);
+  });
+})();
+
+/* ── CLICK HEARTS CANVAS ── */
+(function clickHearts() {
+  const canvas = document.getElementById('click-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
+  let hearts = [];
+  const EMOJIS = ['💖','💗','💓','💕','🌸','✨','💝','🌷'];
+
+  function spawnHearts(x, y, count = 12) {
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 / count) * i + Math.random() * .5;
+      const speed = 2 + Math.random() * 4;
+      hearts.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 2,
+        size: 16 + Math.random() * 20,
+        alpha: 1,
+        emoji: EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
+        decay: .015 + Math.random() * .015,
+      });
+    }
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hearts = hearts.filter(h => h.alpha > 0);
+    hearts.forEach(h => {
+      ctx.save();
+      ctx.globalAlpha = h.alpha;
+      ctx.font = `${h.size}px serif`;
+      ctx.fillText(h.emoji, h.x, h.y);
+      ctx.restore();
+      h.x += h.vx;
+      h.y += h.vy;
+      h.vy += .12;
+      h.alpha -= h.decay;
+    });
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  document.addEventListener('click', e => spawnHearts(e.clientX, e.clientY));
+
+  // expose for button
+  window._spawnHearts = spawnHearts;
+})();
+
+
+/* ── SORRY MODAL ── */
+const SORRY_VARIANTS = [
+  'sorry','Sorry','SORRY','s o r r y','𝒔𝒐𝒓𝒓𝒚','𝓼𝓸𝓻𝓻𝔂',
+  'sorry 💗','sorry 🌸','sorry 💕','sorry ✨','sorry 💖','sorry 🌷',
+  'I\'m sorry','truly sorry','deeply sorry','so so sorry','genuinely sorry',
+  'endlessly sorry','forever sorry','infinitely sorry','wholeheartedly sorry',
+];
+
+const SPECIAL_EVERY = 100; // every Nth word gets bold/special style
+const HEART_EVERY = 250;   // every Nth word is a heart-colored sorry
+
+let sorryModalOpen = false;
+let autoScrolling = false;
+let autoScrollInterval = null;
+let sorryRendered = 0;
+const TOTAL_SORRY = 10500;
+let renderBatchDone = false;
+
+function openSorryModal() {
+  const modal = document.getElementById('sorry-modal');
+  modal.classList.add('open');
+  sorryModalOpen = true;
+  document.body.style.overflow = 'hidden';
+
+  // Spawn hearts from box
+  const box = document.getElementById('sorry-box');
+  const r = box.getBoundingClientRect();
+  window._spawnHearts(r.left + r.width/2, r.top + r.height/2, 16);
+
+  // Render words if not done yet
+  if (!renderBatchDone) {
+    renderBatchDone = true;
+    renderSorryWords();
+  }
+}
+
+function closeSorryModal() {
+  const modal = document.getElementById('sorry-modal');
+  modal.classList.remove('open');
+  sorryModalOpen = false;
+  document.body.style.overflow = '';
+  stopAutoScroll();
+}
+
+function handleModalOverlayClick(e) {
+  if (e.target === document.getElementById('sorry-modal')) closeSorryModal();
+}
+
+function updateModalProgress() {
+  const body = document.getElementById('modal-body');
+  const scrolled = body.scrollTop;
+  const total = body.scrollHeight - body.clientHeight;
+  const pct = total > 0 ? (scrolled / total) * 100 : 0;
+  document.getElementById('modal-progress-bar').style.width = pct + '%';
+}
+
+function toggleAutoScroll() {
+  if (autoScrolling) {
+    stopAutoScroll();
+  } else {
+    startAutoScroll();
+  }
+}
+
+function startAutoScroll() {
+  autoScrolling = true;
+  document.getElementById('scroll-btn').textContent = '⏸ Pause Scroll';
+  const body = document.getElementById('modal-body');
+  autoScrollInterval = setInterval(() => {
+    body.scrollTop += 1.2;
+    updateModalProgress();
+    if (body.scrollTop >= body.scrollHeight - body.clientHeight - 2) {
+      stopAutoScroll();
+      document.getElementById('scroll-btn').textContent = '✓ All read!';
+    }
+  }, 16);
+}
+
+function stopAutoScroll() {
+  autoScrolling = false;
+  clearInterval(autoScrollInterval);
+  const btn = document.getElementById('scroll-btn');
+  if (btn.textContent !== '✓ All read!') btn.textContent = '▶ Auto Scroll';
+}
+
+function renderSorryWords() {
+  const container = document.getElementById('sorry-words-container');
+  const countEl = document.getElementById('modal-sorry-num');
+  const BATCH = 500;
+  let rendered = 0;
+
+  function renderBatch() {
+    const frag = document.createDocumentFragment();
+    const batchEnd = Math.min(rendered + BATCH, TOTAL_SORRY);
+
+    for (let i = rendered; i < batchEnd; i++) {
+      const variant = SORRY_VARIANTS[i % SORRY_VARIANTS.length];
+      const span = document.createElement('span');
+      span.className = 'sorry-word';
+
+      if (i % HEART_EVERY === 0 && i > 0) {
+        span.classList.add('sorry-word-heart');
+      } else if (i % SPECIAL_EVERY === 0 && i > 0) {
+        span.classList.add('sorry-word-special');
+      }
+
+      // staggered fade-in only for first few batches (perf)
+      if (i < 100) {
+        span.style.animationDelay = (i * 15) + 'ms';
+      } else {
+        span.style.opacity = '1';
+        span.style.animation = 'none';
+      }
+
+      span.textContent = variant;
+      frag.appendChild(span);
+
+      // add comma/period sometimes for texture
+      if (i % 7 === 6) {
+        const comma = document.createTextNode(', ');
+        frag.appendChild(comma);
+      } else if (i % 31 === 30) {
+        const br = document.createElement('br');
+        frag.appendChild(br);
+      } else {
+        frag.appendChild(document.createTextNode(' '));
+      }
+    }
+
+    container.appendChild(frag);
+    rendered = batchEnd;
+    sorryRendered = rendered;
+    countEl.textContent = rendered.toLocaleString();
+
+    if (rendered < TOTAL_SORRY) {
+      requestAnimationFrame(renderBatch);
+    }
+  }
+
+  renderBatch();
+}
+
+let forgiven = false;
+function handleForgive() {
+  if (forgiven) return;
+  forgiven = true;
+
+  const btn = document.getElementById('forgive-btn');
+  const msg = document.getElementById('forgiven-msg');
+
+  // burst hearts from button center
+  const rect = btn.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  window._spawnHearts(cx, cy, 28);
+  setTimeout(() => window._spawnHearts(cx, cy, 20), 300);
+  setTimeout(() => window._spawnHearts(cx, cy, 16), 600);
+
+  btn.textContent = 'Thank you 🌸';
+  btn.style.background = 'linear-gradient(135deg, #a855f7 0%, #ec4899 100%)';
+  msg.classList.add('show');
+
+  // rain hearts across screen
+  for (let i = 0; i < 8; i++) {
+    setTimeout(() => {
+      window._spawnHearts(
+        Math.random() * window.innerWidth,
+        Math.random() * window.innerHeight * .7,
+        6
+      );
+    }, i * 180);
+  }
+}
+</script>
+</body>
+</html>
